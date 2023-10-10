@@ -1,0 +1,77 @@
+Design
+library IEEE;
+use IEEE.std_logic_1164.all;
+
+entity demux1_2bit is
+port(
+  i_sel: in std_logic;
+  i_A  : in std_logic;
+  o_S1 : out std_logic;
+  o_S2 : out std_logic);
+end demux1_2bit;
+
+architecture arch_1 of demux1_2bit is
+begin
+  process(i_SEL, i_A) is
+  begin
+    o_S1 <= i_A when i_SEL ='0' else '0';
+    o_S2 <= i_A when i_SEL ='1' else '0';
+  end process;
+end arch_1;
+
+
+
+
+
+
+TestBench
+library IEEE;
+use IEEE.std_logic_1164.all;
+ 
+entity tb_demux1_2bit is
+-- empty
+end tb_demux1_2bit; 
+
+architecture arch_1 of tb_demux1_2bit is
+
+-- DUT component
+component demux1_2bit is
+port(
+  i_sel: in std_logic;
+  i_A  : in std_logic;
+  o_S1 : out std_logic;
+  o_S2 : out std_logic);
+end component;
+
+signal w_SEL, w_A, w_S1, w_S2: std_logic;
+
+begin
+
+  -- Connect DUT
+  DUT: demux1_2bit port map(w_SEL, w_A, w_S1, w_S2);
+
+  process
+  begin
+    w_SEL 	<= 'X';
+    w_A 	<= '0';
+    wait for 1 ns;
+    assert(w_S1='0' and w_S2='0') report "Fail @ X0" severity error;
+
+    w_SEL 	<= '0';
+    w_A 	<= '1';
+    wait for 1 ns;
+    assert(w_S1='1' and w_S2='0') report "Fail @ 01" severity error;
+
+    w_SEL 	<= '1';
+    w_A 	<= '1';
+    wait for 1 ns;
+    assert(w_S1='0' and w_S2='1') report "Fail @ 11" severity error;
+    
+    -- Clear inputs
+    w_SEL <= '0';
+    w_A   <= '0';
+
+    assert false report "Test done." severity note;
+    wait;
+  end process;
+end arch_1;

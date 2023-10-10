@@ -1,0 +1,7 @@
+Circuito 1. Apenas rode a simulação do circuito multiplexador 2-para-1 com canal de dados de 1 bit. O código do projeto e do seu testbench estão em anexo como referência para os demais projetos.
+
+Circuito 2. Implemente um circuito demultiplexador 1-para-2 com canal de dados de 1 bit e o seu testbench.
+
+Circuito 3. Implemente um circuito codificador binário de 2 bits para one-hot (https://en.wikipedia.org/wiki/One-hot) de 4 bits e o seu testbench.
+
+Circuito 4. Implemente um circuito decodificador one-hot de 4 bits para binário de 2 bits e o seu testbench.

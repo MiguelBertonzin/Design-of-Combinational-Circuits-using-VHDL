@@ -1,0 +1,93 @@
+Design
+library IEEE;
+use IEEE.std_logic_1164.all;
+
+entity decod4_2bit is
+port(
+  i_A : in  std_logic;
+  i_B : in  std_logic;
+  i_C : in  std_logic;
+  i_D : in  std_logic;
+  o_S1: out std_logic;
+  o_S2: out std_logic);
+end decod4_2bit;
+
+architecture arch_1 of decod4_2bit is
+begin
+  process(i_A, i_B, i_C, i_D) is
+  begin
+    o_S1 <= i_A or i_B;
+    o_S2 <= i_A or i_C;
+  end process;
+end arch_1;
+
+
+
+TestBench
+library IEEE;
+use IEEE.std_logic_1164.all;
+ 
+entity tb_decod4_2bit is
+-- empty
+end tb_decod4_2bit; 
+
+architecture arch_1 of tb_decod4_2bit is
+
+-- DUT component
+component decod4_2bit is
+port(
+  i_A : in  std_logic;
+  i_B : in  std_logic;
+  i_C : in  std_logic;
+  i_D : in  std_logic;
+  o_S1: out std_logic;
+  o_S2: out std_logic);
+end component;
+
+signal w_A, w_B, w_C, w_D, w_S1, w_S2: std_logic;
+
+begin
+
+  -- Connect DUT
+  DUT: decod4_2bit port map(w_A, w_B, w_C, w_D, w_S1, w_S2);
+
+  process
+  begin
+    w_A <= '0';
+    w_B <= '0';
+    w_C <= '0';
+    w_D <= '1';
+    wait for 1 ns;
+    assert(w_S1='0' and w_S2='0') report "Fail 0/0" severity error;
+  
+    w_A <= '1';
+    w_B <= 'X';
+    w_C <= 'X';
+    w_D <= 'X';
+    wait for 1 ns;
+    assert(w_S1='1' and w_S2='1') report "Fail 1/1" severity error;
+    
+    w_A <= '0';
+    w_B <= '1';
+    w_C <= '0';
+    w_D <= 'X';
+    wait for 1 ns;
+    assert(w_S1='1' and w_S2='0') report "Fail 1/0" severity error;
+    
+    w_A <= '0';
+    w_B <= '0';
+    w_C <= '1';
+    w_D <= 'X';
+    wait for 1 ns;
+    assert(w_S1='0' and w_S2='1') report "Fail 0/1" severity error;
+    
+    -- Clear inputs
+    w_A <= '0';
+    w_B <= '0';
+    w_C <= '0';
+    w_D <= '0';
+
+    assert false report "Test done." severity note;
+    wait;
+  end process;
+end arch_1;

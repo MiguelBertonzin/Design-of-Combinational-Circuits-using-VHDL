@@ -1,0 +1,110 @@
+Design
+library IEEE;
+use IEEE.std_logic_1164.all;
+
+entity cod2_4bit is
+port(
+  i_S1 : in  std_logic;
+  i_S2 : in  std_logic;
+  o_A  : out std_logic;
+  o_B  : out std_logic;
+  o_C  : out std_logic;
+  o_D  : out std_logic);
+end cod2_4bit;
+
+architecture arch_1 of cod2_4bit is
+begin
+  process(i_S1, i_S2, o_A, o_B, o_C, o_D)
+  begin
+    if (i_S1='1') and (i_S2='1') then
+        o_A <= '0';
+        o_B <= '0';
+        o_C <= '0';
+        o_D <= i_S1;
+    end if;
+    if (i_S1='1') and (i_S2='0') then
+        o_A <= i_S2;
+        o_B <= i_S2;
+        o_C <= i_S1;
+        o_D <= i_S2;
+    end if;
+    if (i_S1='0') and (i_S2='1') then
+        o_A <= i_S1;
+        o_B <= i_S2;
+        o_C <= i_S1;
+        o_D <= i_S1;
+    end if;
+    if (i_S1='0') and (i_S2='0') then
+        o_A <= '1';
+        o_B <= i_S1;
+        o_C <= i_S1;
+        o_D <= i_S1;
+	end if;
+  end process;
+end arch_1;
+
+
+
+
+
+TestBench
+library IEEE;
+use IEEE.std_logic_1164.all;
+ 
+entity tb_cod2_4bit is
+-- empty
+end tb_cod2_4bit; 
+
+architecture arch_1 of tb_cod2_4bit is
+
+-- DUT component
+component cod2_4bit is
+port ( i_S1 : in  std_logic;
+       i_S2 : in  std_logic;
+       o_A  : out std_logic;
+       o_B  : out std_logic;
+       o_C  : out std_logic;
+       o_D  : out std_logic);
+end component;
+
+signal w_S1, w_S2, w_A, w_B, w_C, w_D : std_logic;
+
+begin
+
+  -- Connect DUT
+  u_DUT: cod2_4bit port map(i_S1 => w_S1,
+                            i_S2 => w_S2,
+                            o_A  => w_A,
+                            o_B  => w_B,
+                            o_C  => w_C,
+                            o_D  => w_D); 
+  process
+  begin
+    w_S1 <= '0';
+    w_S2 <= '0';
+    wait for 1 ns;
+    assert(w_A = '1') report "Fail 0/0" severity error;
+    
+    w_S1 <= '0';
+    w_S2 <= '1';
+    wait for 1 ns;
+    assert(w_B = '1') report "Fail 0/1" severity error;
+    
+    w_S1 <= '1';
+    w_S2 <= '0';
+    wait for 1 ns;
+    assert(w_C = '1') report "Fail 1/0" severity error;
+    
+    w_S1 <= '1';
+    w_S2 <= '1';
+    wait for 1 ns;
+    assert(w_D = '1') report "Fail 1/1" severity error;
+  
+    -- Clear inputs
+    w_S1 <= '0';
+    w_S2 <= '0';
+
+    assert false report "Test done." severity note;
+    wait;
+  end process;
+end arch_1;
